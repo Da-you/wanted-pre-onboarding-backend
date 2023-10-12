@@ -47,4 +47,7 @@ public class RecruitmentNotice extends BaseEntity {
     public void delete(){
         this.deletedAt = LocalDateTime.now();
     }
+    public String skillName(){
+        return this.skill.getSkill();
+    }
 }

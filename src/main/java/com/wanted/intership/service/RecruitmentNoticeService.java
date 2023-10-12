@@ -1,9 +1,9 @@
-package com.wanted.intership.domain.service;
+package com.wanted.intership.service;
 
 import com.wanted.intership.domain.Company;
 import com.wanted.intership.domain.RecruitmentNotice;
-import com.wanted.intership.domain.dto.NoticeRegisterDto;
-import com.wanted.intership.domain.dto.NoticeRegisterDto.NoticeUpdateDto;
+import com.wanted.intership.dto.request.NoticeRegisterDto;
+import com.wanted.intership.dto.request.NoticeRegisterDto.NoticeUpdateDto;
 import com.wanted.intership.exception.BusinessException;
 import com.wanted.intership.exception.ErrorCode;
 import com.wanted.intership.repository.CompanyRepository;
@@ -19,8 +19,8 @@ public class RecruitmentNoticeService {
     private final CompanyRepository companyRepo;
 
     @Transactional
-    public void registerNotice(Long companyId, NoticeRegisterDto req) {
-        Company company = checkExistCompany(companyId);
+    public void registerNotice( NoticeRegisterDto req) {
+        Company company = checkExistCompany(req.getCompanyId());
         if (req == null) {
             throw new BusinessException(ErrorCode.RECRUITMENT_NOTICE_NOT_FOUND);
         }
@@ -36,8 +36,8 @@ public class RecruitmentNoticeService {
     }
 
     @Transactional
-    public void updateNotice(Long companyId, Long noticeId, NoticeUpdateDto req) {
-        Company company = checkExistCompany(companyId);
+    public void updateNotice( Long noticeId, NoticeUpdateDto req) {
+        Company company = checkExistCompany(req.getCompanyId());
         RecruitmentNotice notice = getRecruitmentNotice(noticeId, company);
         notice.update(
                 req.getPosition(),

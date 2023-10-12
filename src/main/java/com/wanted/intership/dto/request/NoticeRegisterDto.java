@@ -1,4 +1,4 @@
-package com.wanted.intership.domain.dto;
+package com.wanted.intership.dto.request;
 
 import com.wanted.intership.domain.Skill;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandi
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoticeRegisterDto {
+    private Long companyId;
     public String position;
     public Integer reward;
     public String content;
@@ -20,6 +21,7 @@ public class NoticeRegisterDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class NoticeUpdateDto{
+        private Long companyId;
         public String position;
         public Integer reward;
         public String content;
