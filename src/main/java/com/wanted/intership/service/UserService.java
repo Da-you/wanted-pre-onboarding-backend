@@ -4,6 +4,7 @@ import com.wanted.intership.domain.Company;
 import com.wanted.intership.domain.RecruitmentNotice;
 import com.wanted.intership.domain.User;
 import com.wanted.intership.domain.UserWithRecruitmentNotice;
+import com.wanted.intership.dto.request.ApplyRequest;
 import com.wanted.intership.dto.response.RecruitmentNoticeWithCompanyListResponse;
 import com.wanted.intership.dto.response.RecruitmentNoticeWithCompanyListResponse.RecruitmentNoticeWithCompanyDetailResponse;
 import com.wanted.intership.exception.BusinessException;
@@ -75,15 +76,15 @@ public class UserService {
                 .reward(recruitmentNotice.getReward())
                 .skill(recruitmentNotice.skillName())
                 .content(recruitmentNotice.getContent())
-                .additionalNoticeList(getAdditionalNoticeList(recruitmentNotice.getCompany()))
+                .additionalNoticeList(getAdditionalNoticeList(noticeId,recruitmentNotice.getCompany()))
                 .build();
     }
 
     @Transactional
-    public void applyNotice(Long userId, Long noticeId) {
-        User user = userRepo.findById(userId)
+    public void applyNotice(ApplyRequest req) {
+        User user = userRepo.findById(req.getUserId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        RecruitmentNotice recruitmentNotice = recruitmentNoticeRepo.getReferenceById(noticeId);
+        RecruitmentNotice recruitmentNotice = recruitmentNoticeRepo.getReferenceById(req.getNoticeId());
         Boolean checkApply = userWithRecruitmentNoticeRepo.existsByUserAndRecruitmentNotice(user, recruitmentNotice);
         if (Boolean.TRUE.equals(checkApply)) {
             throw new BusinessException(ErrorCode.ALREADY_APPLY);
@@ -97,12 +98,8 @@ public class UserService {
 
     }
 
-    private List<Long> getAdditionalNoticeList(Company company) {
-        List<RecruitmentNotice> list = recruitmentNoticeRepo.findAllByCompany(company);
-        List<Long> res = new ArrayList<>();
-        for (RecruitmentNotice recruitmentNotice : list) {
-            res.add(recruitmentNotice.getId());
-        }
-        return res;
+    private List<Long> getAdditionalNoticeList(Long id,Company company) {
+        List<Long> list = recruitmentNoticeRepo.findIdsNotEqual(id,company);
+        return list;
     }
 }

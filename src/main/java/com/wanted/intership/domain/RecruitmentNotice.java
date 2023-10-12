@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "deletedAt is null")
+@Where(clause = "deleted_at is null")
 @Table(name = "recruitment")
 public class RecruitmentNotice extends BaseEntity {
 
@@ -22,9 +22,13 @@ public class RecruitmentNotice extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+    @Column(nullable = false)
     private String position;
     private Integer reward;
+    @Column(nullable = false)
     private String content;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Skill skill;
     private LocalDateTime deletedAt;
 
@@ -44,10 +48,12 @@ public class RecruitmentNotice extends BaseEntity {
         this.content = content;
         this.skill = skill;
     }
-    public void delete(){
+
+    public void delete() {
         this.deletedAt = LocalDateTime.now();
     }
-    public String skillName(){
+
+    public String skillName() {
         return this.skill.getSkill();
     }
 }

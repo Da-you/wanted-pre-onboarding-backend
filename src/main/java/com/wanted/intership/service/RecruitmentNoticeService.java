@@ -21,7 +21,7 @@ public class RecruitmentNoticeService {
     @Transactional
     public void registerNotice( NoticeRegisterDto req) {
         Company company = checkExistCompany(req.getCompanyId());
-        if (req == null) {
+        if (req.getSkill() == null || req.getContent() == null) {
             throw new BusinessException(ErrorCode.RECRUITMENT_NOTICE_NOT_FOUND);
         }
 
